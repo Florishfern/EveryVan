@@ -60,10 +60,29 @@ export const AuthView: React.FC = () => {
 
   return (
     <div className="auth-page">
-      <div style={{ display: 'flex', gap: '32px', alignItems: 'flex-start', width: '100%', maxWidth: '960px', padding: '24px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '440px', padding: '24px' }}>
 
-        {/* Right: Auth Card */}
-        <div style={{ width: '400px', flexShrink: 0 }}>
+        {/* Title */}
+        <div style={{ textAlign: 'center', marginBottom: '28px' }}>
+          <h1 style={{
+            fontSize: '42px',
+            fontWeight: 800,
+            background: 'linear-gradient(135deg, var(--primary) 0%, #6366f1 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            letterSpacing: '-1px',
+            marginBottom: '6px',
+          }}>
+            EveryVan
+          </h1>
+          <p style={{ fontSize: '14px', color: 'var(--text-muted)', fontWeight: 500 }}>
+            ระบบจองตั๋วรถตู้ออนไลน์
+          </p>
+        </div>
+
+        {/* Auth Card */}
+        <div style={{ width: '100%' }}>
           <div className="card" style={{ padding: '28px' }}>
 
             {/* Tabs */}

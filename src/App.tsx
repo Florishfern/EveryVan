@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { VanProvider, useVan } from './context/VanContext';
 import { Sidebar, Topbar } from './components/Layout';
-import { AuthView } from './views/AuthView';
-import { PassengerView } from './views/PassengerView';
-import { DriverView } from './views/DriverView';
-import { AdminView } from './views/AdminView';
+import { AuthView } from './view/AuthView';
+import { PassengerView } from './view/PassengerView';
+import { DriverView } from './view/DriverView';
+import { AdminView } from './view/AdminView';
 
 const PAGE_TITLES: Record<string, Record<string, string>> = {
   passenger: { book: 'จองตั๋วรถตู้', tickets: 'ตั๋วของฉัน', profile: 'ข้อมูลสมาชิก' },
