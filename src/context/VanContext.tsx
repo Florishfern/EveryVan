@@ -31,6 +31,7 @@ export interface Van {
   driverId: string;
   occupiedSeats: number[];
   accidentReport?: string;
+  date?: string;
 }
 
 export interface Booking {
@@ -113,6 +114,7 @@ interface VanContextType {
   cancelBooking: (bookingId: string) => Promise<void>;
   updateVanStatus: (vanId: string, status: Van['status'], report?: string) => Promise<void>;
   updateDepartureTime: (vanId: string, newTime: string) => Promise<void>;
+  createVanSchedule: (data: { plateNo: string; vanType: string; capacity: number; destination: string; departureTime: string; price: number; driverId: string; date: string }) => Promise<void>;
   addReview: (driverId: string, rating: number, comment: string) => Promise<void>;
   boardPassenger: (bookingId: string) => Promise<boolean>;
   completeTrip: (vanId: string) => Promise<void>;
@@ -300,6 +302,18 @@ export const VanProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
+  const createVanSchedule = async (data: { plateNo: string; vanType: string; capacity: number; destination: string; departureTime: string; price: number; driverId: string; date: string }) => {
+    // Store new van schedule — fall back to local state if API doesn't support it yet
+    const newVan: Van = {
+      id: 'van-' + Math.random().toString(36).substr(2, 9),
+      ...data,
+      status: 'Waiting',
+      occupiedSeats: [],
+    };
+    setVans(prev => [...prev, newVan]);
+    addNotification(`เพิ่มตารางเดินรถใหม่: ${data.destination} เวลา ${data.departureTime} น. วันที่ ${data.date}`, 'schedule_change');
+  };
+
   const addReview = async (driverId: string, rating: number, comment: string) => {
     if (!currentUser) return;
     await api.drivers.submitReview(driverId, rating, comment, currentUser.profile.name);
@@ -355,7 +369,7 @@ export const VanProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       drivers, vans, bookings, transactions, notifications, boardingPoints: BOARDING_POINTS,
       addNotification, markNotificationsAsRead,
       bookTicket, confirmPayment, cancelBooking,
-      updateVanStatus, updateDepartureTime,
+      updateVanStatus, updateDepartureTime, createVanSchedule,
       addReview, boardPassenger, completeTrip, fastForwardTime
     }}>
       {children}

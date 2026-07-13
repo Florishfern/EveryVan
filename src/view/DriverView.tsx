@@ -5,7 +5,7 @@ import { Users, AlertTriangle, Scan } from 'lucide-react';
 
 interface DriverViewProps { activeNav: string; }
 
-export const DriverView: React.FC<DriverViewProps> = ({ activeNav }) => {
+export const DriverView: React.FC<DriverViewProps> = ({ activeNav: _activeNav }) => {
   const { currentUser, vans, bookings, boardPassenger, completeTrip, updateVanStatus, drivers, confirmPayment } = useVan();
 
   const currentDriver = drivers.find(d => d.name === currentUser?.profile.name) || drivers[0];
@@ -25,11 +25,6 @@ export const DriverView: React.FC<DriverViewProps> = ({ activeNav }) => {
 
   const activeVan = vans.find(v => v.id === selectedVanId);
 
-  // Boarding scanner simulation
-  const [boardingScannerOpen, setBoardingScannerOpen] = useState(false);
-  const [selectedBoardingBookingId, setSelectedBoardingBookingId] = useState('');
-  const [boardingStatusMessage, setBoardingStatusMessage] = useState({ text: '', type: '' });
-
   // Ticket verification + QR scan simulation
   const [showScanner, setShowScanner] = useState(false);
   const [selectedScanBookingId, setSelectedScanBookingId] = useState('');
@@ -45,22 +40,6 @@ export const DriverView: React.FC<DriverViewProps> = ({ activeNav }) => {
   const vanBookings = bookings.filter(b => b.vanId === selectedVanId && (b.status === 'Paid' || b.status === 'Boarded' || b.status === 'Completed'));
   const totalBooked = vanBookings.length;
   const totalBoarded = vanBookings.filter(b => b.status === 'Boarded').length;
-
-  const handleSimulateBoarding = async () => {
-    if (!selectedBoardingBookingId) return;
-    const success = await boardPassenger(selectedBoardingBookingId);
-    if (success) {
-      setBoardingStatusMessage({ text: '✓ เช็คอินขึ้นรถสำเร็จ! ยินดีต้อนรับผู้โดยสาร', type: 'success' });
-      setSelectedBoardingBookingId('');
-    } else {
-      const b = bookings.find(item => item.id === selectedBoardingBookingId);
-      if (b && b.status === 'Pending Payment') {
-        setBoardingStatusMessage({ text: '❌ ขึ้นรถไม่สำเร็จ: ผู้โดยสารยังไม่ชำระเงิน กรุณาตรวจสอบกับคนจัดคิว', type: 'danger' });
-      } else {
-        setBoardingStatusMessage({ text: 'ไม่สามารถเช็คอินผู้โดยสารรายนี้ได้', type: 'danger' });
-      }
-    }
-  };
 
   const handleSimulateScan = () => {
     if (!selectedScanBookingId) return;
@@ -135,7 +114,7 @@ export const DriverView: React.FC<DriverViewProps> = ({ activeNav }) => {
             {myVans.map(v => (
               <button 
                 key={v.id}
-                onClick={() => { setSelectedVanId(v.id); setBoardingScannerOpen(false); setBoardingStatusMessage({ text: '', type: '' }); }}
+                onClick={() => { setSelectedVanId(v.id); }}
                 className={`card ${selectedVanId === v.id ? 'primary-border' : ''}`}
                 style={{ 
                   padding: '12px', 
